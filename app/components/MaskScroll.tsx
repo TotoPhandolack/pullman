@@ -3,27 +3,54 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { hotel, heroPoster } from "../lib/content";
+import { hotel } from "../lib/content";
 import { ChevronDown } from "./icons";
+import Hero from "./Hero";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-/* The wordmark is masked onto the hero video via CSS mask-image. This
-   browser's mask compositing keys off alpha, not luminance — an opaque
-   background rect (even filled black) would make alpha 1 everywhere and
-   defeat the mask entirely, so the SVG must leave the area outside the
-   text fully transparent (no background rect at all). A heavy system
-   sans is used instead of the site serif so the mask stays razor-sharp —
-   no webfont has to be embedded inside the data URI for it to render. */
+/* The FULLMAN letters are knocked *out* of a solid frame so you look
+   straight through them at the Hero behind — the letters are clear
+   windows, not filled with their own video.
+
+   The frame div paints a solid page-colour rect, then two mask layers are
+   composited with `exclude` (a.k.a. webkit `xor`):
+     • a flat gradient — opaque everywhere, so the whole rect is kept, and
+     • the wordmark SVG — opaque only on the glyphs.
+   `exclude` keeps whatever is in exactly one layer, so the rect survives
+   everywhere except the glyphs, which get punched out to full transparency.
+   A heavy system sans keeps the cut razor-sharp with no embedded webfont.
+
+   Rendered letter size is font-size ÷ viewBox width × the CSS mask width —
+   seven letters on one line are width-bound on any normal (< ~2:1) screen,
+   so there's a hard ceiling on how tall they can get before "FULLMAN"
+   itself clips against the viewBox at the edges (F and N first). This is
+   tuned right up against that ceiling without crossing it; the tagline
+   below fills the vertical space that's structurally left over, rather
+   than leaving it empty. */
 const MASK_SVG = `data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400'>` +
     `<text x='50%' y='53%' text-anchor='middle' dominant-baseline='middle' ` +
     `font-family='Arial, Helvetica, sans-serif' font-weight='800' ` +
-    `font-size='300' letter-spacing='4' fill='white'>${hotel.wordmark}</text>` +
+    `font-size='320' letter-spacing='-4' fill='white'>${hotel.wordmark}</text>` +
     `</svg>`,
 )}`;
+
+const knockoutMask = {
+  WebkitMaskImage: `url("${MASK_SVG}"), linear-gradient(#000, #000)`,
+  maskImage: `url("${MASK_SVG}"), linear-gradient(#000, #000)`,
+  WebkitMaskRepeat: "no-repeat, no-repeat",
+  maskRepeat: "no-repeat, no-repeat",
+  WebkitMaskPosition: "center, center",
+  maskPosition: "center, center",
+  WebkitMaskSize: "min(95vw, 91rem) auto, 100% 100%",
+  maskSize: "min(95vw, 91rem) auto, 100% 100%",
+  WebkitMaskComposite: "xor",
+  maskComposite: "exclude",
+  willChange: "transform, opacity",
+} as React.CSSProperties;
 
 export default function MaskScroll() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -33,36 +60,54 @@ export default function MaskScroll() {
   // it. Keeping the id on the unpinned outer section keeps that anchor
   // accurate.
   const pinRef = useRef<HTMLDivElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reduce || !pinRef.current || !wrapRef.current) return;
+    if (reduce || !pinRef.current || !frameRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.timeline({
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinRef.current,
           start: "top top",
-          end: "+=150%",
+          end: "+=110%",
           pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
           scrub: 1,
         },
-      })
-        .fromTo(
-          ".mask-caption",
-          { opacity: 1 },
-          { opacity: 0, duration: 0.25, ease: "none" },
-          0,
-        )
-        .fromTo(
-          wrapRef.current,
-          { scale: 1, xPercent: 0 },
-          { scale: 3.2, xPercent: -6, ease: "none", duration: 1 },
-          0,
-        );
+        defaults: { ease: "none" },
+      });
+
+      // The Hero copy is the first thing the visitor reads; it gradually
+      // disappears as they scroll, so nothing lingers half-legible once the
+      // frame closes in.
+      tl.fromTo(".hero-copy", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.55 }, 0);
+
+      // The framed window closes in over the Hero and resolves onto the
+      // wordmark — the reverse of the old zoom-in. It starts fully clear so
+      // the visitor first sees the untouched Hero, then the frame fades in
+      // and shrinks into place around the letters.
+      tl.fromTo(frameRef.current, { scale: 2.2 }, { scale: 1, duration: 1 }, 0);
+      tl.fromTo(
+        frameRef.current,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.85 },
+        0,
+      );
+
+      // Scroll cue resolves in last, once the window settles. Ends exactly
+      // at the timeline's end (duration 1) so the pin never holds on a
+      // static, unchanging frame while still consuming scroll input.
+      tl.fromTo(
+        ".mask-caption",
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.25 },
+        0.75,
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -74,52 +119,30 @@ export default function MaskScroll() {
         ref={pinRef}
         className="relative flex min-h-svh w-full items-center justify-center overflow-hidden"
       >
-        {/* Ambient backdrop so the space around the letterforms reads as
-            the same moody footage, not a flat void, before the mask zooms
-            in. */}
-        <video
-          src="/assets/video/hotel-hero.mp4"
-          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-20 blur-md"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 bg-noir/90" />
-
-        <div className="mask-caption eyebrow absolute top-[30%] left-1/2 -translate-x-1/2">
-          Welcome to
+        {/* The scene the visitor lands on. It stays put and is what shows
+            through the letters once the frame closes over it. `isolate`
+            keeps the Hero's internal z-10 content trapped in its own
+            stacking context, so it stays *behind* the frame instead of
+            escaping on top of it. */}
+        <div className="absolute inset-0 isolate">
+          <Hero />
         </div>
 
+        {/* Frame in the page colour with the FULLMAN letters punched clean
+            out of it. Starts hidden (opacity-0) so no-JS / reduced-motion
+            simply shows the Hero; pointer-events-none so it never swallows
+            clicks meant for the Hero's buttons. */}
         <div
-          ref={wrapRef}
-          className="relative aspect-4/1 w-[92vw] max-w-350"
-        >
-          <video
-            src="/assets/video/hotel-hero.mp4"
-            poster={heroPoster.src}
-            className="h-full w-full object-cover"
-            style={{
-              WebkitMaskImage: `url("${MASK_SVG}")`,
-              maskImage: `url("${MASK_SVG}")`,
-              WebkitMaskSize: "100% 100%",
-              maskSize: "100% 100%",
-              WebkitMaskRepeat: "no-repeat",
-              maskRepeat: "no-repeat",
-              WebkitMaskPosition: "center",
-              maskPosition: "center",
-            }}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        </div>
+          ref={frameRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-noir opacity-0"
+          style={knockoutMask}
+        />
 
-        <p className="mask-caption absolute bottom-[28%] left-1/2 -translate-x-1/2 font-serif text-lg text-cream/80 sm:text-xl">
+        {/* Tagline — fills the space below the letters (a 7-letter wordmark
+            on one line can only get so tall before it clips, so there's
+            always a band left over under it) instead of leaving it empty. */}
+        <p className="mask-caption absolute top-[64%] left-1/2 -translate-x-1/2 text-center font-serif text-lg text-cream/80 opacity-0 sm:text-xl">
           {hotel.tagline}
         </p>
 
@@ -127,7 +150,7 @@ export default function MaskScroll() {
         <a
           href="#about"
           aria-label="Scroll to explore"
-          className="mask-caption absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-cream/70 transition-colors hover:text-gold"
+          className="mask-caption absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-cream/70 opacity-0 transition-colors hover:text-gold"
         >
           <ChevronDown className="h-7 w-7 animate-bounce" />
         </a>

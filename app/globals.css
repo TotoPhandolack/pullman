@@ -134,10 +134,11 @@ body {
 }
 
 /* Scroll-reveal — only arms once JS marks the body ready, so content
- * is always visible if JS is disabled. */
+ * is always visible if JS is disabled. Reversed direction: elements enter
+ * from above (settle downward) rather than rising up from below. */
 .reveal-ready .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(-28px);
   transition:
     opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);

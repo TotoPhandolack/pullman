@@ -5,7 +5,7 @@ export default function About() {
   const [primary, secondary] = aboutImages;
 
   return (
-    <section id="about" className="relative py-24 sm:py-32">
+    <section id="about" className="relative pt-14 pb-24 sm:pt-20 sm:pb-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
           {/* Copy */}
