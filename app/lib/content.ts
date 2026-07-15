@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ *
- * Pullman Hotel — site content
+ * Fullman Hotel — site content
  * All copy + asset references live here so components stay presentational.
  * Photos & tour video were sourced into /public/assets from the
  * reference listing and renamed hotel-01..30 / hotel-tour.mp4.
@@ -36,15 +36,15 @@ export type Review = {
 };
 
 export const hotel = {
-  name: "Pullman Hotel",
-  wordmark: "PULLMAN",
+  name: "Fullman Hotel",
+  wordmark: "FULLMAN",
   tagline: "Timeless Luxury, Effortless Comfort",
   intro:
-    "A sanctuary of quiet elegance where every detail is considered. Pullman Hotel pairs contemporary design with warm, intuitive service — an address for travellers who expect more from a stay.",
+    "A sanctuary of quiet elegance where every detail is considered. Fullman Hotel pairs contemporary design with warm, intuitive service — an address for travellers who expect more from a stay.",
   address: "Luang Prabang",
   city: "Laos",
   phone: "+856 71 018 220",
-  email: "reservations@pullmanhotel.com",
+  email: "reservations@fullmanhotel.com",
   reception: "24-hour reception & concierge",
   rating: 4.8,
   reviewCount: 1240,
@@ -92,11 +92,11 @@ function img(n: number, alt: string): GalleryImage {
   return { src: `/assets/images/hotel-${id}.jpg`, alt, ...IMAGE_DIMS[n] };
 }
 
-export const heroPoster = img(28, "Aerial view of Pullman Hotel at dusk");
+export const heroPoster = img(28, "Aerial view of Fullman Hotel at dusk");
 
 /** Curated high-resolution slides for the hero background crossfade. */
 export const heroSlides: GalleryImage[] = [
-  img(28, "Aerial view of Pullman Hotel and pool at dusk"),
+  img(28, "Aerial view of Fullman Hotel and pool at dusk"),
   img(12, "Executive suite lounge with soft evening light"),
   img(7, "Bright guest room with mountain views"),
   img(23, "Aerial view of the resort framed by mountains"),
@@ -106,10 +106,19 @@ export const heroSlides: GalleryImage[] = [
 export const navLinks = [
   { label: "About", href: "#about" },
   { label: "Rooms", href: "#rooms" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Virtual Tour", href: "#virtual-tour" },
   { label: "Amenities", href: "#amenities" },
   { label: "Contact", href: "#contact" },
 ] as const;
+
+/** Copy for the 360° Virtual Tour section (see <VirtualTour/>). */
+export const virtualTour = {
+  eyebrow: "Virtual Tour",
+  heading: "Step inside in 360°",
+  subtitle:
+    "Explore our spaces as if you were already here — drag to look around, and tap the markers on the floor to move from scene to scene.",
+  stopLabel: "Scene",
+} as const;
 
 export const stats = [
   { value: "120", label: "Rooms & Suites" },
@@ -225,5 +234,5 @@ export const reviews: Review[] = [
 
 /** Full gallery — every photo we pulled from the reference listing. */
 export const gallery: GalleryImage[] = Array.from({ length: 30 }, (_, i) =>
-  img(i + 1, `Pullman Hotel gallery photo ${i + 1}`),
+  img(i + 1, `Fullman Hotel gallery photo ${i + 1}`),
 );

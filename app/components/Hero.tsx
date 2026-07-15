@@ -1,23 +1,41 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { hotel, heroPoster } from "../lib/content";
 import { ArrowRight, ChevronDown, StarIcon } from "./icons";
 
+/* Background playlist: the trimmed brand-free loop first, then the full
+   tour video once it ends, cycling back around. */
+const heroVideos = [
+  "/assets/video/hotel-hero.mp4",
+  "/assets/video/hotel-tour.mp4",
+];
+
 export default function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoIndex, setVideoIndex] = useState(0);
+
+  // When the playlist advances, the src swap resets the element to a paused
+  // state in some browsers — kick playback explicitly (muted, so allowed).
+  useEffect(() => {
+    videoRef.current?.play().catch(() => {});
+  }, [videoIndex]);
+
   return (
     <section id="top" className="relative min-h-svh w-full overflow-hidden">
       {/* Background tour video */}
       <video
+        ref={videoRef}
+        key={heroVideos[videoIndex]}
+        src={heroVideos[videoIndex]}
         className="absolute inset-0 h-full w-full object-cover"
         autoPlay
         muted
-        loop
         playsInline
         preload="metadata"
-        poster={heroPoster.src}
-      >
-        {/* Trimmed loop — the branded intro/outro title cards from the
-            original tour video are removed; full clip kept as hotel-tour.mp4 */}
-        <source src="/assets/video/hotel-hero.mp4" type="video/mp4" />
-      </video>
+        poster={videoIndex === 0 ? heroPoster.src : undefined}
+        onEnded={() => setVideoIndex((i) => (i + 1) % heroVideos.length)}
+      />
 
       {/* Cinematic overlays — layered so left-aligned text stays legible
           over any (including bright) video frame. */}

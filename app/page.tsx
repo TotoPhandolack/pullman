@@ -2,7 +2,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Rooms from "./components/Rooms";
-import Gallery from "./components/Gallery";
+import VirtualTour from "./components/VirtualTour";
 import Amenities from "./components/Amenities";
 import Reviews from "./components/Reviews";
 import BookingBar from "./components/BookingBar";
@@ -19,7 +19,7 @@ export default function Home() {
         <Hero />
         <About />
         <Rooms />
-        <Gallery />
+        <VirtualTour />
         <Amenities />
         <Reviews />
         <BookingBar />

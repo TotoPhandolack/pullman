@@ -24,7 +24,7 @@ export default function Location() {
               Perfectly placed, warmly welcomed
             </h2>
             <p className="mt-5 max-w-md text-base leading-relaxed text-muted">
-              Moments from the river and the city&apos;s finest dining, Pullman
+              Moments from the river and the city&apos;s finest dining, Fullman
               Hotel is your calm base in the heart of it all.
             </p>
 

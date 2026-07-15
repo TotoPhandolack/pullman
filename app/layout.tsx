@@ -15,11 +15,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Pullman Hotel — Timeless Luxury & Refined Stays",
+  title: "Fullman Hotel — Timeless Luxury & Refined Stays",
   description:
-    "Pullman Hotel offers refined rooms and suites, world-class amenities, and unforgettable hospitality. Discover an elegant escape and book your stay.",
+    "Fullman Hotel offers refined rooms and suites, world-class amenities, and unforgettable hospitality. Discover an elegant escape and book your stay.",
   keywords: [
-    "Pullman Hotel",
+    "Fullman Hotel",
     "luxury hotel",
     "boutique hotel",
     "hotel booking",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "resort",
   ],
   openGraph: {
-    title: "Pullman Hotel — Timeless Luxury & Refined Stays",
+    title: "Fullman Hotel — Timeless Luxury & Refined Stays",
     description:
       "Refined rooms and suites, world-class amenities, and unforgettable hospitality.",
     type: "website",
