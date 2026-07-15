@@ -39,4 +39,10 @@ export const tourStops: TourStop[] = [
   { id: "360degree-3", title: "360degree 3", image: "/assets/tour-360/f8d8a837-81e5-41d2-9314-2eaa0115f8a0.webp", defaultYaw: 1.6393, defaultPitch: -0.0824, hotspots: [
       { id: "8c8bb2b2-6d93-4857-841b-71cc525b2b8b", type: "link", yaw: 2.1772, pitch: -0.1111, label: "Window", icon: "look", targetStopId: "360degree-2" },
     ] },
+  { id: "hotel-04", title: "Hotel 04", image: "/assets/tour-360/7c247e9c-9532-4b5c-b216-844c32fdc238.jpg", defaultYaw: 0.0726, defaultPitch: -0.1249, hotspots: [
+      { id: "2464ae81-d7fd-4cb5-842e-552403b26571", type: "link", yaw: 0.9272, pitch: 0.1343, icon: "look", targetStopId: "360degree-3" },
+    ] },
+  { id: "hotel-26", title: "Hotel 26", image: "/assets/tour-360/84823edb-7e11-49b5-a56b-38af51eaa348.jpg", hotspots: [
+      { id: "ba974378-2226-414c-867e-ba39600b8aa3", type: "link", yaw: 4.7757, pitch: 0.0569, icon: "door", targetStopId: "hotel-04" },
+    ] },
 ];
