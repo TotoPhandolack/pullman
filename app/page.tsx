@@ -1,5 +1,5 @@
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+import MaskScroll from "./components/MaskScroll";
 import About from "./components/About";
 import Rooms from "./components/Rooms";
 import VirtualTour from "./components/VirtualTour";
@@ -16,7 +16,7 @@ export default function Home() {
       <ScrollReveal />
       <Navbar />
       <main>
-        <Hero />
+        <MaskScroll />
         <About />
         <Rooms />
         <VirtualTour />
