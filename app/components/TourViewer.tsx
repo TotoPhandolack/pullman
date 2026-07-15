@@ -5,12 +5,7 @@ import type { Viewer } from "@photo-sphere-viewer/core";
 import type { MarkerConfig, MarkersPlugin } from "@photo-sphere-viewer/markers-plugin";
 import type { Hotspot } from "../lib/tour-stops";
 import { installPanCursor, type PanCursor } from "./viewerCursor";
-import {
-  floorDiscDataUri,
-  infoMarkerHtml,
-  FLOOR_DISC_SIZE,
-  FLOOR_DISC_ROTATION,
-} from "./editor/hotspotIcons";
+import { infoMarkerHtml, linkMarkerHtml } from "./editor/hotspotIcons";
 
 interface Props {
   src: string;
@@ -27,10 +22,9 @@ function buildMarkers(hotspots: Hotspot[]): MarkerConfig[] {
     if (h.type === "link") {
       return {
         id: h.id,
-        imageLayer: floorDiscDataUri(h.icon),
         position: { yaw: h.yaw, pitch: h.pitch },
-        size: FLOOR_DISC_SIZE,
-        rotation: FLOOR_DISC_ROTATION,
+        html: linkMarkerHtml(h.label, h.icon),
+        size: { width: 46, height: 46 },
         tooltip: h.label || "Go to this spot",
         data: h,
       };

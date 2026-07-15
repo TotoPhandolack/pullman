@@ -122,3 +122,38 @@ body {
     transform: scale(1.12);
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Virtual-tour link hotspot — a soft attention pulse + drop shadow.
+ * Applied to the camera-facing link markers built in hotspotIcons.ts.
+ * ------------------------------------------------------------------ */
+@keyframes tourLinkPulse {
+  0% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--color-gold) 55%, transparent),
+      0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+  70% {
+    box-shadow:
+      0 0 0 14px transparent,
+      0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 transparent,
+      0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+}
+.fm-tour-link {
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  animation: tourLinkPulse 2.2s ease-out infinite;
+  transition: transform 0.15s ease;
+}
+.fm-tour-link:hover {
+  transform: scale(1.08);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-tour-link {
+    animation: none;
+  }
+}

@@ -35,16 +35,16 @@ export default function Navbar() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:h-20 sm:px-8">
         <a
           href="#top"
-          className="flex items-center gap-3 font-serif text-xl font-semibold tracking-[0.35em] text-cream sm:text-2xl"
+          className="flex items-center gap-3 font-serif text-xl font-semibold tracking-[0.35em] text-[#ffd566] sm:text-2xl"
         >
           {hotel.wordmark}
           <Image
             src="/assets/images/fullman.png"
             alt={`${hotel.name} logo`}
-            width={54}
-            height={40}
+            width={81}
+            height={80}
             priority
-            className="h-9 w-auto sm:h-10"
+            className="h-16 w-auto sm:h-18"
           />
         </a>
 

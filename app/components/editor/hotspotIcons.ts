@@ -95,3 +95,26 @@ export function infoMarkerHtml(label: string | null | undefined, iconId: string 
       display:flex;align-items:center;justify-content:center;
       box-shadow:0 2px 12px rgba(0,0,0,0.45);cursor:pointer;">${glyph}</div>`;
 }
+
+/**
+ * Upright, camera-facing marker for link hotspots. Earlier link hotspots were
+ * flat "floor discs" laid on the ground — invisible edge-on when placed on a
+ * wall or near the horizon. A billboard marker stays clearly visible and
+ * clickable at any placement angle. The `.fm-tour-link` class (see globals.css)
+ * adds a gentle attention pulse.
+ */
+export function linkMarkerHtml(
+  label: string | null | undefined,
+  iconId: string | null | undefined,
+): string {
+  // Default glyph reads as "go / enter" (an upward chevron) when no icon is set.
+  const glyph = hotspotIconSvg(iconId) ?? `<path d="M6 15l6-6 6 6"/>`;
+  return `<div class="fm-tour-link" title="${label ? escapeHtml(label) : "Go to this spot"}" style="
+      width:46px;height:46px;border-radius:9999px;background:#c9a24b;
+      border:2px solid rgba(255,255,255,0.9);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a"
+        stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"
+        style="pointer-events:none;">${glyph}</svg>
+    </div>`;
+}
