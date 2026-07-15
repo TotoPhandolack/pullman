@@ -34,6 +34,10 @@ export const metadata: Metadata = {
   },
 };
 
+/* Light is the default theme; a stored "dark" choice must apply before
+ * first paint, so this runs as a blocking inline script — not in React. */
+const themeInit = `try{if(localStorage.getItem("theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,9 +46,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-noir text-cream">{children}</body>
+      <body className="min-h-full bg-noir text-cream">
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        {children}
+      </body>
     </html>
   );
 }

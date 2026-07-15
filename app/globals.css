@@ -2,25 +2,64 @@
 
 /* ------------------------------------------------------------------ *
  * Fullman Hotel — luxury / elegant design tokens
- * Dark charcoal canvas · warm cream ink · muted gold accent
+ *
+ * One semantic scale (noir = canvas, cream = ink, gold = accent) with
+ * two palettes. Light is the default; `data-theme="dark"` swaps in the
+ * dark palette — set on <html> for the whole page, or on any subtree
+ * that must stay dark regardless of theme (hero over video, 360 viewer).
  * ------------------------------------------------------------------ */
+:root {
+  /* Light — warm ivory canvas · espresso ink · antique gold accent */
+  --noir: #f7f2e9;        /* page background */
+  --surface: #fdfaf4;     /* cards / elevated sections */
+  --surface-2: #efe7d8;   /* hover / nested surfaces */
+  --cream: #262119;       /* primary text */
+  --muted: #6f6656;       /* secondary text */
+  --gold: #8a6a1f;        /* primary gold */
+  --gold-soft: #755a1a;   /* highlight / hover gold */
+  --gold-deep: #5f4915;   /* pressed / borders */
+  --line: #e0d6c2;
+  --wordmark: #8a6a1f;    /* navbar wordmark */
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* Dark — charcoal canvas · warm cream ink · muted gold accent */
+  --noir: #0b0b0d;
+  --surface: #141317;
+  --surface-2: #1c1b21;
+  --cream: #f4efe6;
+  --muted: #a49e93;
+  --gold: #c9a24b;
+  --gold-soft: #e3cd94;
+  --gold-deep: #9c7a2f;
+  --line: #2a2a30;
+  --wordmark: #ffd566;
+  color-scheme: dark;
+}
+
+/* `inline` keeps utilities pointing at the raw vars above, so the
+ * palette resolves where a class is used and subtree scoping works. */
 @theme inline {
   /* Surfaces */
-  --color-noir: #0b0b0d;        /* page background — near black */
-  --color-surface: #141317;     /* cards / elevated sections */
-  --color-surface-2: #1c1b21;   /* hover / nested surfaces */
+  --color-noir: var(--noir);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
 
   /* Ink */
-  --color-cream: #f4efe6;       /* primary text — warm off-white */
-  --color-muted: #a49e93;       /* secondary text — warm grey */
+  --color-cream: var(--cream);
+  --color-muted: var(--muted);
 
   /* Accent */
-  --color-gold: #c9a24b;        /* primary gold */
-  --color-gold-soft: #e3cd94;   /* highlight gold (text) */
-  --color-gold-deep: #9c7a2f;   /* pressed / borders */
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-deep: var(--gold-deep);
 
   /* Lines */
-  --color-line: #2a2a30;
+  --color-line: var(--line);
+
+  /* Brand */
+  --color-wordmark: var(--wordmark);
 
   /* Type */
   --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
@@ -37,16 +76,16 @@
 }
 
 body {
-  background: var(--color-noir);
-  color: var(--color-cream);
+  background: var(--noir);
+  color: var(--cream);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-gold) 30%, transparent);
-  color: var(--color-cream);
+  background: color-mix(in srgb, var(--gold) 30%, transparent);
+  color: var(--cream);
 }
 
 /* Subtle branded scrollbar */
@@ -54,15 +93,15 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-noir);
+  background: var(--noir);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-2);
+  background: var(--surface-2);
   border-radius: 9999px;
-  border: 2px solid var(--color-noir);
+  border: 2px solid var(--noir);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold-deep);
+  background: var(--gold-deep);
 }
 
 /* ------------------------------------------------------------------ *
@@ -74,8 +113,13 @@ body {
   font-size: 0.72rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--gold);
   font-weight: 500;
+}
+
+/* Lifts copy off busy imagery — the halo matches the canvas/scrim color. */
+.text-halo {
+  text-shadow: 0 2px 20px color-mix(in srgb, var(--noir) 55%, transparent);
 }
 
 /* Thin gold rule */
@@ -84,7 +128,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-gold),
+    var(--gold),
     transparent
   );
 }
@@ -130,7 +174,7 @@ body {
 @keyframes tourLinkPulse {
   0% {
     box-shadow:
-      0 0 0 0 color-mix(in srgb, var(--color-gold) 55%, transparent),
+      0 0 0 0 color-mix(in srgb, var(--gold) 55%, transparent),
       0 2px 14px rgba(0, 0, 0, 0.55);
   }
   70% {

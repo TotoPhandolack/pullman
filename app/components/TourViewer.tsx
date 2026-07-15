@@ -164,6 +164,8 @@ export default function TourViewer({
     <div
       role="img"
       aria-label={`${alt}. Drag to look around this 360 photo.`}
+      // Always dark: spinner + link-marker pulse read against 360 imagery.
+      data-theme="dark"
       className={`relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 ${className}`}
     >
       <div ref={containerRef} className="absolute inset-0" />

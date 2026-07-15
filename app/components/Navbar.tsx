@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { navLinks, hotel } from "../lib/content";
 import { MenuIcon, CloseIcon } from "./icons";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -35,7 +36,7 @@ export default function Navbar() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:h-20 sm:px-8">
         <a
           href="#top"
-          className="flex items-center gap-3 font-serif text-xl font-semibold tracking-[0.35em] text-[#ffd566] sm:text-2xl"
+          className="flex items-center gap-1 font-serif text-xl font-semibold tracking-[0.35em] text-wordmark sm:text-2xl"
         >
           {hotel.wordmark}
           <Image
@@ -44,7 +45,8 @@ export default function Navbar() {
             width={81}
             height={80}
             priority
-            className="h-16 w-auto sm:h-18"
+            // The artwork carries wide transparent margins; pull it in.
+            className="-ml-3 h-16 w-auto sm:h-18"
           />
         </a>
 
@@ -64,6 +66,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <a
             href="#booking"
             className="hidden rounded-full border border-gold bg-gold px-5 py-2.5 text-sm font-medium text-noir transition-colors hover:bg-gold-soft sm:inline-block"

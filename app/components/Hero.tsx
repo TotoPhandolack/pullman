@@ -44,7 +44,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-linear-to-t from-noir/80 via-transparent to-noir/40" />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pt-24 pb-28 [text-shadow:0_2px_20px_rgba(0,0,0,0.55)] sm:px-8">
+      <div className="text-halo relative z-10 mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-5 pt-24 pb-28 sm:px-8">
         <p className="eyebrow mb-5 flex items-center gap-3">
           <span className="h-px w-8 bg-gold" />
           Welcome to {hotel.name}
