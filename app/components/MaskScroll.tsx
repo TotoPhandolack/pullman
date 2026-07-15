@@ -38,6 +38,9 @@ const MASK_SVG = `data:image/svg+xml,${encodeURIComponent(
     `</svg>`,
 )}`;
 
+/* Shared with the tagline's position below — see the calc() there for why. */
+const MASK_WIDTH = "min(68vw, 56rem)";
+
 const knockoutMask = {
   WebkitMaskImage: `url("${MASK_SVG}"), linear-gradient(#000, #000)`,
   maskImage: `url("${MASK_SVG}"), linear-gradient(#000, #000)`,
@@ -45,12 +48,30 @@ const knockoutMask = {
   maskRepeat: "no-repeat, no-repeat",
   WebkitMaskPosition: "center, center",
   maskPosition: "center, center",
-  WebkitMaskSize: "min(95vw, 91rem) auto, 100% 100%",
-  maskSize: "min(95vw, 91rem) auto, 100% 100%",
+  WebkitMaskSize: `${MASK_WIDTH} auto, 100% 100%`,
+  maskSize: `${MASK_WIDTH} auto, 100% 100%`,
   WebkitMaskComposite: "xor",
   maskComposite: "exclude",
   willChange: "transform, opacity",
 } as React.CSSProperties;
+
+/* The letters are centred (mask-position 50% 50%) and their rendered
+   height is MASK_WIDTH / 4 (the SVG's 4:1 viewBox), so their bottom edge
+   sits at 50% + MASK_WIDTH/8 from the top of the pinned scene. Deriving
+   the tagline's position from that same expression — instead of a guessed
+   percentage — keeps it sitting right under the letters at every viewport
+   size, rather than leaving a gap that only happened to look right on the
+   one screen it was tuned against. */
+const taglineStyle: React.CSSProperties = {
+  top: `calc(50% + (${MASK_WIDTH}) / 8 + 1rem)`,
+};
+
+/* Same derivation, offset further down to clear the tagline's own line
+   height — keeps the scroll cue part of the same cohesive group instead
+   of stranded near the bottom of the viewport with dead space in between. */
+const scrollCueStyle: React.CSSProperties = {
+  top: `calc(50% + (${MASK_WIDTH}) / 8 + 5rem)`,
+};
 
 export default function MaskScroll() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -73,7 +94,7 @@ export default function MaskScroll() {
         scrollTrigger: {
           trigger: pinRef.current,
           start: "top top",
-          end: "+=110%",
+          end: "+=85%",
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
@@ -82,21 +103,24 @@ export default function MaskScroll() {
         defaults: { ease: "none" },
       });
 
-      // The Hero copy is the first thing the visitor reads; it gradually
-      // disappears as they scroll, so nothing lingers half-legible once the
-      // frame closes in.
-      tl.fromTo(".hero-copy", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.55 }, 0);
+      // The Hero copy is the first thing the visitor reads. It finishes
+      // fading out *before* the frame becomes noticeably opaque (below) —
+      // sequential, not overlapping — so there's no stretch of scroll where
+      // Hero text and the FULLMAN letters are both half-visible at once,
+      // fighting each other for legibility.
+      tl.fromTo(".hero-copy", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.3 }, 0);
 
       // The framed window closes in over the Hero and resolves onto the
-      // wordmark — the reverse of the old zoom-in. It starts fully clear so
-      // the visitor first sees the untouched Hero, then the frame fades in
-      // and shrinks into place around the letters.
+      // wordmark — the reverse of the old zoom-in. Scale runs the whole
+      // time (it's what makes the reveal feel like a zoom), but opacity
+      // only starts ramping up once the Hero copy is nearly gone, so the
+      // letters resolve cleanly instead of emerging through leftover text.
       tl.fromTo(frameRef.current, { scale: 2.2 }, { scale: 1, duration: 1 }, 0);
       tl.fromTo(
         frameRef.current,
         { autoAlpha: 0 },
-        { autoAlpha: 1, duration: 0.85 },
-        0,
+        { autoAlpha: 1, duration: 0.55 },
+        0.25,
       );
 
       // Scroll cue resolves in last, once the window settles. Ends exactly
@@ -139,18 +163,25 @@ export default function MaskScroll() {
           style={knockoutMask}
         />
 
-        {/* Tagline — fills the space below the letters (a 7-letter wordmark
-            on one line can only get so tall before it clips, so there's
-            always a band left over under it) instead of leaving it empty. */}
-        <p className="mask-caption absolute top-[64%] left-1/2 -translate-x-1/2 text-center font-serif text-lg text-cream/80 opacity-0 sm:text-xl">
+        {/* Tagline — sits right under the letters (position derived from
+            the same width expression as the mask, see taglineStyle) so it
+            fills that space instead of leaving it empty, at any viewport
+            size. */}
+        <p
+          style={taglineStyle}
+          className="mask-caption absolute left-1/2 -translate-x-1/2 text-center font-serif text-lg text-cream/80 opacity-0 sm:text-xl"
+        >
           {hotel.tagline}
         </p>
 
-        {/* Scroll cue */}
+        {/* Scroll cue — grouped with the tagline (see scrollCueStyle) rather
+            than pinned to the viewport's bottom edge, so it doesn't strand
+            itself far below with empty space in between. */}
         <a
           href="#about"
           aria-label="Scroll to explore"
-          className="mask-caption absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-cream/70 opacity-0 transition-colors hover:text-gold"
+          style={scrollCueStyle}
+          className="mask-caption absolute left-1/2 z-10 -translate-x-1/2 text-cream/70 opacity-0 transition-colors hover:text-gold"
         >
           <ChevronDown className="h-7 w-7 animate-bounce" />
         </a>
