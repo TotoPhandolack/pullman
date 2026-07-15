@@ -41,26 +41,67 @@ export const hotel = {
   tagline: "Timeless Luxury, Effortless Comfort",
   intro:
     "A sanctuary of quiet elegance where every detail is considered. Pullman Hotel pairs contemporary design with warm, intuitive service — an address for travellers who expect more from a stay.",
-  address: "88 Grand Boulevard, Riverside District",
-  city: "Metropolis",
-  phone: "+1 (555) 018-2200",
+  address: "Luang Prabang",
+  city: "Laos",
+  phone: "+856 71 018 220",
   email: "reservations@pullmanhotel.com",
   reception: "24-hour reception & concierge",
   rating: 4.8,
   reviewCount: 1240,
+  // Real coordinates for the property location, supplied by the user.
+  geo: { lat: 19.8624095, lng: 102.1275524 },
+  mapsUrl: "https://maps.app.goo.gl/M5Q4kCmEhaJs9jqC6",
 } as const;
 
-/** Intrinsic size helper: hotel-01..19 are 1280×853, hotel-20..30 are 960×660. */
-function dims(n: number): { width: number; height: number } {
-  return n <= 19 ? { width: 1280, height: 853 } : { width: 960, height: 660 };
-}
+/** Intrinsic dimensions measured from each downloaded original (px). */
+const IMAGE_DIMS: Record<number, { width: number; height: number }> = {
+  1: { width: 1920, height: 1282 },
+  2: { width: 1920, height: 1282 },
+  3: { width: 1920, height: 1282 },
+  4: { width: 1920, height: 1282 },
+  5: { width: 1280, height: 1920 },
+  6: { width: 1920, height: 979 },
+  7: { width: 1920, height: 1282 },
+  8: { width: 1920, height: 1282 },
+  9: { width: 1920, height: 1282 },
+  10: { width: 1920, height: 1280 },
+  11: { width: 1920, height: 1282 },
+  12: { width: 1920, height: 1282 },
+  13: { width: 1920, height: 1282 },
+  14: { width: 1920, height: 1282 },
+  15: { width: 1920, height: 1280 },
+  16: { width: 1920, height: 1280 },
+  17: { width: 1916, height: 1279 },
+  18: { width: 1920, height: 1282 },
+  19: { width: 1920, height: 1282 },
+  20: { width: 1920, height: 1282 },
+  21: { width: 1920, height: 1282 },
+  22: { width: 1920, height: 1282 },
+  23: { width: 1920, height: 1422 },
+  24: { width: 1920, height: 1282 },
+  25: { width: 1920, height: 1282 },
+  26: { width: 1920, height: 1282 },
+  27: { width: 1920, height: 1282 },
+  28: { width: 1920, height: 1282 },
+  29: { width: 1920, height: 1282 },
+  30: { width: 1920, height: 1282 },
+};
 
 function img(n: number, alt: string): GalleryImage {
   const id = String(n).padStart(2, "0");
-  return { src: `/assets/images/hotel-${id}.jpg`, alt, ...dims(n) };
+  return { src: `/assets/images/hotel-${id}.jpg`, alt, ...IMAGE_DIMS[n] };
 }
 
 export const heroPoster = img(28, "Aerial view of Pullman Hotel at dusk");
+
+/** Curated high-resolution slides for the hero background crossfade. */
+export const heroSlides: GalleryImage[] = [
+  img(28, "Aerial view of Pullman Hotel and pool at dusk"),
+  img(12, "Executive suite lounge with soft evening light"),
+  img(7, "Bright guest room with mountain views"),
+  img(23, "Aerial view of the resort framed by mountains"),
+  img(17, "Suite living area with lounge seating"),
+];
 
 export const navLinks = [
   { label: "About", href: "#about" },

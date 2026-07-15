@@ -57,34 +57,25 @@ export default function Location() {
             </ul>
           </div>
 
-          {/* Decorative map panel (self-contained, no external embed) */}
+          {/* Live map panel */}
           <div className="reveal relative min-h-[22rem] overflow-hidden rounded-3xl border border-line bg-noir">
-            {/* grid streets */}
-            <div
-              className="absolute inset-0 opacity-40"
-              style={{
-                backgroundImage:
-                  "linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px)",
-                backgroundSize: "48px 48px",
-              }}
+            <iframe
+              title={`Map showing the location of ${hotel.name}`}
+              src={`https://www.google.com/maps?q=${hotel.geo.lat},${hotel.geo.lng}&z=15&output=embed`}
+              className="absolute inset-0 h-full w-full grayscale-[15%] contrast-[1.05]"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
             />
-            {/* diagonal avenue */}
-            <div className="absolute -inset-10 rotate-[24deg]">
-              <div className="absolute left-1/3 top-0 h-full w-8 bg-surface-2" />
-              <div className="absolute left-2/3 top-0 h-3 w-full bg-surface-2" />
-            </div>
-            {/* radial glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--color-gold)_18%,transparent),transparent_60%)]" />
-
-            {/* pin */}
-            <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
-              <span className="grid h-14 w-14 place-items-center rounded-full bg-gold text-noir shadow-lg shadow-black/40">
-                <MapPinIcon className="h-7 w-7" />
-              </span>
-              <span className="mt-3 rounded-full border border-line bg-noir/90 px-4 py-1.5 text-sm font-medium text-cream backdrop-blur-sm">
-                {hotel.name}
-              </span>
-            </div>
+            <a
+              href={hotel.mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full border border-line bg-noir/90 px-4 py-2 text-sm font-medium text-cream backdrop-blur-sm transition-colors hover:text-gold"
+            >
+              <MapPinIcon className="h-4 w-4" />
+              Get Directions
+            </a>
           </div>
         </div>
       </div>
